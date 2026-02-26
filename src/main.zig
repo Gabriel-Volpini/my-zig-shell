@@ -12,5 +12,11 @@ pub fn main() !void {
 
     const command: []const u8 = stdin.takeDelimiter('\n') catch null orelse "";
 
-    try stdout.print("{s}: command not found\n", .{command});
+    try repl(command);
+}
+
+fn repl(command: []const u8) !void {
+    while (true) {
+        try stdout.print("{s}: command not found\n", .{command});
+    }
 }
