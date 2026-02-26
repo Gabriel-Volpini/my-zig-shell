@@ -8,8 +8,9 @@ var stdin_reader = std.fs.File.stdin().readerStreaming(&buffer);
 const stdin = &stdin_reader.interface;
 
 const Command = enum {
-    invalid,
+    echo,
     exit,
+    invalid,
 };
 
 pub fn main() !void {
@@ -17,9 +18,13 @@ pub fn main() !void {
         try stdout.print("$ ", .{});
 
         const input: []const u8 = stdin.takeDelimiter('\n') catch null orelse "";
-        const cmd: Command = std.meta.stringToEnum(Command, input) orelse .invalid;
+        var inputIterator = std.mem.splitAny(u8, input, " ");
+
+        const cmd: Command = std.meta.stringToEnum(Command, inputIterator.next().?) orelse .invalid;
+        const arg: []const u8 = inputIterator.rest();
 
         switch (cmd) {
+            .echo => try stdout.print("{s}", .{arg}),
             .exit => std.process.exit(0),
             .invalid => try stdout.print("{s}: command not found\n", .{input}),
         }
