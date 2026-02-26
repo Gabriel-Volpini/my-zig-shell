@@ -8,15 +8,10 @@ var stdin_reader = std.fs.File.stdin().readerStreaming(&buffer);
 const stdin = &stdin_reader.interface;
 
 pub fn main() !void {
-    try stdout.print("$ ", .{});
-
-    const command: []const u8 = stdin.takeDelimiter('\n') catch null orelse "";
-
-    try repl(command);
-}
-
-fn repl(command: []const u8) !void {
     while (true) {
+        try stdout.print("$ ", .{});
+
+        const command: []const u8 = stdin.takeDelimiter('\n') catch null orelse "";
         try stdout.print("{s}: command not found\n", .{command});
     }
 }
