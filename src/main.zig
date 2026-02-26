@@ -24,7 +24,7 @@ pub fn main() !void {
         const arg: []const u8 = inputIterator.rest();
 
         switch (cmd) {
-            .echo => try stdout.print("{s}", .{arg}),
+            .echo => try stdout.print("{s}\n", .{arg}),
             .exit => std.process.exit(0),
             .invalid => try stdout.print("{s}: command not found\n", .{input}),
         }
