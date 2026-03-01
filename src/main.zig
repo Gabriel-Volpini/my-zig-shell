@@ -63,7 +63,7 @@ fn handleType(allocator: std.mem.Allocator, cmd: []const u8) !void {
 
         try stdout.print("{s} is {s} \n", .{ cmd, filePath });
         break;
+    } else {
+        try stdout.print("{s}: not found\n", .{cmd});
     }
-
-    try stdout.print("{s}: not found\n", .{cmd});
 }
