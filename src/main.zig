@@ -12,6 +12,10 @@ const Command = enum {
     exit,
     invalid,
     type,
+
+    pub fn transform(str: []const u8) ?Command {
+        return std.meta.stringToEnum(Command, str);
+    }
 };
 
 pub fn main() !void {
@@ -21,14 +25,14 @@ pub fn main() !void {
         const input: []const u8 = stdin.takeDelimiter('\n') catch null orelse "";
         var inputIterator = std.mem.splitAny(u8, input, " ");
 
-        const cmd: Command = std.meta.stringToEnum(Command, inputIterator.next().?) orelse .invalid;
+        const cmd: Command = Command.transform(inputIterator.next().?) orelse .invalid;
         const arg: []const u8 = inputIterator.rest();
 
         switch (cmd) {
             .echo => try stdout.print("{s}\n", .{arg}),
             .exit => std.process.exit(0),
             .invalid => try stdout.print("{s}: command not found\n", .{input}),
-            .type => if (std.meta.stringToEnum(Command, arg) != null) try stdout.print("{s} is a shell builtin\n", .{arg}) else try stdout.print("{s}: not found\n", .{arg}),
+            .type => if (Command.transform(arg) != null) try stdout.print("{s} is a shell builtin\n", .{arg}) else try stdout.print("{s}: not found\n", .{arg}),
         }
     }
 }
