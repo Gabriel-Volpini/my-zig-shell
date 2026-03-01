@@ -28,7 +28,7 @@ pub fn main() !void {
             .echo => try stdout.print("{s}\n", .{arg}),
             .exit => std.process.exit(0),
             .invalid => try stdout.print("{s}: command not found\n", .{input}),
-            .type => if (std.meta.stringToEnum(Command, arg) != null) try stdout.print("{s} is a shell builtin\n", .{arg}) else try stdout.print("{s}: command not found\n", .{arg}),
+            .type => if (std.meta.stringToEnum(Command, arg) != null) try stdout.print("{s} is a shell builtin\n", .{arg}) else try stdout.print("{s}: not found\n", .{arg}),
         }
     }
 }
