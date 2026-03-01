@@ -62,5 +62,6 @@ fn handleType(allocator: std.mem.Allocator, cmd: []const u8) !void {
         std.posix.access(filePath, std.posix.X_OK) catch continue;
 
         try stdout.print("{s} is {s} \n", .{ cmd, filePath });
+        break;
     }
 }
