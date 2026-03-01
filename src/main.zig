@@ -60,6 +60,6 @@ fn handleType(allocator: std.mem.Allocator, cmd: []const u8) !void {
             .{ path, cmd },
         );
         _ = std.fs.openFileAbsolute(filePath, .{}) catch continue;
-        try stdout.print("-> {s} \n", .{filePath});
+        try stdout.print("{s} is {s} \n", .{ cmd, filePath });
     }
 }
