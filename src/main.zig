@@ -24,7 +24,7 @@ pub fn main() !void {
         const cmd: Command = std.meta.stringToEnum(Command, inputIterator.next().?) orelse .invalid;
         const arg: []const u8 = inputIterator.rest();
 
-        teste: switch (cmd) {
+        switch (cmd) {
             .echo => try stdout.print("{s}\n", .{arg}),
             .exit => std.process.exit(0),
             .invalid => try stdout.print("{s}: command not found\n", .{input}),
