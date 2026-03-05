@@ -37,7 +37,7 @@ pub fn run(allocator: std.mem.Allocator, data: Input) void {
     const cmd = Commands.getValue(data.cmd);
 
     switch (cmd) {
-        .echo => echo(data.args),
+        .echo => echo(allocator, data.args),
         .type => @"type"(allocator, data.args) catch {},
         .notBuiltin => notBuiltin(allocator, data),
         .exit => std.process.exit(0),
@@ -45,10 +45,11 @@ pub fn run(allocator: std.mem.Allocator, data: Input) void {
     }
 }
 
-fn echo(args: [][]const u8) void {
+fn echo(allocator: std.mem.Allocator, args: [][]const u8) void {
     if (args.len <= 0) return;
 
-    stdout.print("{s}\n", .{args[0]}) catch {};
+    const value = std.mem.join(allocator, " ", args) catch return;
+    stdout.print("{s}\n", .{value}) catch return;
 }
 
 fn @"type"(allocator: std.mem.Allocator, args: [][]const u8) !void {
