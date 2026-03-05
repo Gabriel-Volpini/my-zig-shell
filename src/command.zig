@@ -10,6 +10,7 @@ const Commands = enum {
     notBuiltin,
     exit,
     pwd,
+    cd,
 
     pub fn getValue(str: []const u8) Commands {
         return std.meta.stringToEnum(Commands, str) orelse .notBuiltin;
@@ -42,6 +43,7 @@ pub fn run(allocator: std.mem.Allocator, data: Input) void {
         .notBuiltin => notBuiltin(allocator, data),
         .exit => std.process.exit(0),
         .pwd => pwd(allocator),
+        .cd => cd(allocator, data.args),
     }
 }
 
@@ -49,6 +51,7 @@ fn echo(allocator: std.mem.Allocator, args: [][]const u8) void {
     if (args.len <= 0) return;
 
     const value = std.mem.join(allocator, " ", args) catch return;
+    defer allocator.free(value);
     stdout.print("{s}\n", .{value}) catch return;
 }
 
@@ -97,4 +100,13 @@ fn pwd(allocator: std.mem.Allocator) void {
     defer allocator.free(cwd);
 
     stdout.print("{s}\n", .{cwd}) catch return;
+}
+
+fn cd(allocator: std.mem.Allocator, args: [][]const u8) void {
+    const value = std.mem.join(allocator, " ", args) catch return;
+    defer allocator.free(value);
+
+    std.process.changeCurDir(value) catch {
+        stdout.print("cd: {s}: No such file or directory\n", .{value}) catch return;
+    };
 }
