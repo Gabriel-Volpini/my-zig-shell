@@ -76,7 +76,7 @@ fn notBuiltin(allocator: std.mem.Allocator, data: Input) void {
         var argv: std.ArrayList([]const u8) = .empty;
         defer argv.deinit(allocator);
 
-        argv.append(allocator, fp) catch return;
+        argv.append(allocator, std.fs.path.basename(fp)) catch return;
         argv.appendSlice(allocator, data.args) catch return;
 
         var child = std.process.Child.init(argv.items, allocator);
