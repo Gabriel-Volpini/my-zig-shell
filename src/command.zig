@@ -106,6 +106,13 @@ fn cd(allocator: std.mem.Allocator, args: [][]const u8) void {
     const value = std.mem.join(allocator, " ", args) catch return;
     defer allocator.free(value);
 
+    if (std.mem.eql(u8, value, "~")) {
+        const homeDir = std.process.getEnvVarOwned(allocator, "HOME") catch return;
+        defer allocator.free(homeDir);
+        std.process.changeCurDir(homeDir) catch {};
+        return;
+    }
+
     std.process.changeCurDir(value) catch {
         stdout.print("cd: {s}: No such file or directory\n", .{value}) catch return;
     };
